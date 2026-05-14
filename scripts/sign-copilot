@@ -1,0 +1,17 @@
+#!/bin/bash
+# sign-copilot
+#
+# Sign a work machine's SSH public key using the local Copilot CA.
+# Installed on the hub by setup-hub.sh; called via SSH from copilot-bootstrap.sh.
+#
+# Usage:
+#   sign-copilot <host>                  # signs /tmp/<host>.pub
+#   sign-copilot <host> <pubkey-path>    # signs the given pubkey file
+
+HOST="$1"
+PUB="${2:-/tmp/${HOST}.pub}"
+
+[ -z "$HOST" ] && { echo "Usage: sign-copilot <host> [pubkey]" >&2; exit 1; }
+[ -f "$PUB" ] || { echo "✗ $PUB not found" >&2; exit 1; }
+
+ssh-keygen -s __CA_PATH__ -I "${HOST}-$(date +%Y%m%d)" -n __PRINCIPAL__ -V __VALIDITY__ "$PUB"
