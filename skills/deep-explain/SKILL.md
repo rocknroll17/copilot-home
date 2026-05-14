@@ -10,7 +10,33 @@ Use this skill when a concept is genuinely hard — not just unfamiliar, but str
 
 ## Procedure
 
-Follow these five steps in order. Do not skip or reorder them.
+Follow these steps in order. Do not skip or reorder them.
+
+---
+
+### 0. Source verification (before writing anything)
+
+Do this first, silently, before composing the explanation.
+
+**Self-assess the concept:**
+- Is this a well-established, timeless mechanism (e.g., backpropagation, softmax, attention basics from the 2017 paper)? → internal knowledge is likely sufficient.
+- Does it involve: recent work (roughly post-2023), specific benchmark numbers, exact paper claims, a particular implementation variant, or anything you're not fully confident about? → **search before explaining**.
+
+**When to search:**
+Search the web or retrieve the original paper if any of these apply:
+- The concept or technique is from a paper published within the last 2–3 years
+- The user asks about a specific model, method name, or architecture that may have evolved
+- You're about to state a specific number, formula, or design choice you're not certain about
+- You know the general idea but not the precise mechanism
+
+**What counts as a reliable source:**
+Original papers (arXiv, proceedings), official documentation, or established technical blogs (e.g., Lil'Log, Distill.pub, Sebastian Ruder). Avoid secondary summaries as primary sources.
+
+**How to surface this in the output:**
+At the top of your response, include one line in this format:
+> 📎 *출처: [논문/페이지 제목](URL), 검색어: "..."* — 또는 — *내부 지식 기반 (학습 데이터 이전 개념, 추가 검증 불필요)*
+
+If you searched and found something, cite it. If you searched and couldn't find a reliable source, say so explicitly rather than proceeding from memory. Do not silently fall back to training data for recent concepts.
 
 ---
 
