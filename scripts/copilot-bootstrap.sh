@@ -57,7 +57,7 @@ echo "HUB_HOST=\"${HUB_HOST}\""
 echo "HUB_USER=\"${HUB_USER}\""
 echo "REPO_NAME=\"${REPO_NAME}\""
 echo 'SRC="${HUB_USER}@${HUB_HOST}:${REPO_NAME}"'
-echo 'OPTS="reconnect,ServerAliveInterval=15,ServerAliveCountMax=2,ConnectTimeout=5,IdentityFile=$HOME/.ssh/id_copilot"'
+echo 'OPTS="reconnect,ServerAliveInterval=15,ServerAliveCountMax=2,ConnectTimeout=5,BatchMode=yes,IdentityFile=$HOME/.ssh/id_copilot"'
 echo ''
 echo 'mount_one() {'
 echo '    mkdir -p ~/.copilot/$1'
