@@ -30,6 +30,15 @@ CERT_VALIDITY="${CERT_VALIDITY:-+365d}"
 CA_PATH="${CA_PATH:-$HOME/copilot-ca}"
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+# --- 0. git pull -------------------------------------------------------------
+echo "[0/5] Pulling latest from git..."
+if git -C "$REPO_DIR" pull --ff-only 2>/dev/null; then
+    echo "  Up to date."
+else
+    echo "  ⚠ git pull failed (no network or dirty tree?), continuing with local version."
+fi
 
 echo "→ Copilot hub setup"
 echo "  HUB_HOST       = $HUB_HOST"

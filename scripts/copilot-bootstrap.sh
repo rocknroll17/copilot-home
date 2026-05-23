@@ -57,15 +57,24 @@ echo "HUB_HOST=\"${HUB_HOST}\""
 echo "HUB_USER=\"${HUB_USER}\""
 echo "REPO_NAME=\"${REPO_NAME}\""
 echo 'SRC="${HUB_USER}@${HUB_HOST}:${REPO_NAME}"'
-echo 'OPTS="reconnect,ServerAliveInterval=15,IdentityFile=$HOME/.ssh/id_copilot"'
+echo 'OPTS="reconnect,ServerAliveInterval=15,ServerAliveCountMax=2,ConnectTimeout=5,IdentityFile=$HOME/.ssh/id_copilot"'
 echo ''
 echo 'mount_one() {'
 echo '    mkdir -p ~/.copilot/$1'
 echo '    mountpoint -q ~/.copilot/$1 2>/dev/null && return'
-echo '    sshfs "${SRC}/$1" ~/.copilot/$1 -o "$OPTS" 2>/dev/null'
+echo '    timeout 10 sshfs "${SRC}/$1" ~/.copilot/$1 -o "$OPTS" 2>/dev/null'
 echo '}'
 echo ''
-echo 'if command -v nc >/dev/null 2>&1 && timeout 2 nc -z "$HUB_HOST" 22 2>/dev/null; then'
+echo '# nc 없으면 ssh -o ConnectTimeout=2 로 fallback 체크'
+echo 'hub_reachable() {'
+echo '    if command -v nc >/dev/null 2>&1; then'
+echo '        timeout 2 nc -z "$HUB_HOST" 22 2>/dev/null'
+echo '    else'
+echo '        ssh -qo BatchMode=yes -o ConnectTimeout=2 -o StrictHostKeyChecking=no "${HUB_USER}@${HUB_HOST}" exit 2>/dev/null'
+echo '    fi'
+echo '}'
+echo ''
+echo 'if hub_reachable; then'
 echo '    for d in skills agents hooks instructions; do mount_one $d; done'
 echo 'fi'
 } > "$HOME/.copilot-automount"
@@ -77,7 +86,7 @@ if ! grep -q ".copilot-automount" "$HOME/.bashrc" 2>/dev/null; then
 fi
 
 # --- 5. First mount --------------------------------------------------------
-echo "[5/5] First mount..."
+echo "[5/5] First mount (skipped if hub unreachable)..."
 # shellcheck disable=SC1091
 source "$HOME/.copilot-automount"
 
